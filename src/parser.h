@@ -1,9 +1,12 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include "./ai.h"
+#include <vector>
+#include <string>
 
 class Parser {
-    Parser(int argc, char** argv);
+    std::vector<std::string> tokens;
+    Parser(int argc, char** argv) : tokens(argv + 1, argv + argc) {};
     AI* doParse();
 
 public:
