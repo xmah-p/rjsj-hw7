@@ -4,9 +4,11 @@
 #include <stdexcept>
 #include <unordered_map>
 
+#include "./ai_derived.h"
 #include "./rjsjai.h"
 
 AI* Parser::doParse() {
+    const char* MY_TOKEN{"32ed9a62-2519-43be-8420-c157a7b61fab"};
     int ai_type = 0;
     std::string prompt = "";
     std::string path = "";
@@ -27,21 +29,33 @@ AI* Parser::doParse() {
             if (it->front() == '-')
                 throw std::runtime_error("Invalid prompt: " + *it);
             prompt = *it;
-        } 
-        
+        }
+
         else if (token == "--output" || token == "-o") {
-            if (!needPath) throw std::runtime_error("Unexpected argument: " + token);
+            if (!needPath)
+                throw std::runtime_error("Unexpected argument: " + token);
             ++it;
             if (it->front() == '-')
                 throw std::runtime_error("Invalid path: " + *it);
             path = *it;
-        } 
-        
+        }
+
         else
             throw std::runtime_error("Invalid argument: " + token);
     }
-
-    return nullptr;
+    switch (ai_type) {
+        case AI_TYPE_CHAT:
+            return new ChatAI(ai_create(MY_TOKEN), prompt);
+            break;
+        case AI_TYPE_DRAW:
+            return new DrawAI(ai_create(MY_TOKEN), prompt, path);
+            break;
+        case AI_TYPE_WOLFRAM:
+            return new MathAI(ai_create(MY_TOKEN), prompt, path);
+            break;
+        default:
+            throw std::runtime_error("Fail to initialize AI!");
+    }
 }
 
 AI* Parser::parse(int argc, char** argv) {
@@ -49,6 +63,6 @@ AI* Parser::parse(int argc, char** argv) {
         return Parser(argc, argv).doParse();
     } catch (std::runtime_error& e) {
         std::cerr << e.what();
+        return nullptr;
     }
-    return nullptr;
 }
