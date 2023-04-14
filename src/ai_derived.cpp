@@ -1,5 +1,6 @@
 #include "./ai_derived.h"
 
+#include <algorithm>
 #include <fstream>
 #include <ios>
 #include <iostream>
@@ -9,7 +10,6 @@
 #include <string>
 
 #include "rjsjai.h"
-
 
 ChatAI::~ChatAI() { ai_free(bot); }
 
@@ -29,28 +29,15 @@ void ChatAI::sendRequest() {
 
 void ChatAI::showResponse() {
     std::ostream_iterator<char> os_it(std::cout);
-    char* dest;
+    char* dest{nullptr};
     int len = ai_result(bot, dest);
-    std::copy(dest, dest + len, os_it);
+    dest = new char[len + 1];
+    ai_result(bot, dest);
+    std::copy(dest, dest + len + 1, os_it);
+    delete [] dest;
 }
 
-void DrawAI::showResponse() {
-    std::ofstream out_file(path, std::ios::out);
-    std::ostream_iterator<char> os_it(out_file);
-    
-    char* dest;
-    int len = ai_result(bot, dest);
-    std::copy(dest, dest + len, os_it);
-}
-
-void MathAI::showResponse() {
-    std::ofstream out_file(path, std::ios::out);
-    std::ostream_iterator<char> os_it(out_file);
-
-    char* dest;
-    int len = ai_result(bot, dest);
-    std::copy(dest, dest + len, os_it);
-}
+DrawAI::~DrawAI() { ai_free(bot); }
 
 void DrawAI::sendRequest() {
     try {
@@ -66,6 +53,19 @@ void DrawAI::sendRequest() {
     }
 }
 
+void DrawAI::showResponse() {
+    std::ofstream out_file(path, std::ios::out | std::ios::binary);
+    std::ostream_iterator<char> os_it(out_file);
+    char* dest{nullptr};
+    int len = ai_result(bot, dest);
+    dest = new char[len + 1];
+    ai_result(bot, dest);
+    std::copy(dest, dest + len + 1, os_it);
+    delete[] dest;
+}
+
+MathAI::~MathAI() { ai_free(bot); }
+
 void MathAI::sendRequest() {
     try {
         ai_send(bot, AI_TYPE_WOLFRAM, prompt.c_str());
@@ -80,6 +80,13 @@ void MathAI::sendRequest() {
     }
 }
 
-DrawAI::~DrawAI() { ai_free(bot); }
-
-MathAI::~MathAI() { ai_free(bot); }
+void MathAI::showResponse() {
+    std::ofstream out_file(path, std::ios::out | std::ios::binary);
+    std::ostream_iterator<char> os_it(out_file);
+    char* dest{nullptr};
+    int len = ai_result(bot, dest);
+    dest = new char[len + 1];
+    ai_result(bot, dest);
+    std::copy(dest, dest + len + 1, os_it);
+    delete[] dest;
+}

@@ -26,6 +26,9 @@ AI* Parser::doParse() {
                 throw std::runtime_error("Invalid argument: " + token);
             if ((ai_type = types[token]) == AI_TYPE_CHAT) needPath = false;
             ++it;
+            if (it == tokens.end())
+                throw std::runtime_error("Please enter prompt!");
+
             if (it->front() == '-')
                 throw std::runtime_error("Invalid prompt: " + *it);
             prompt = *it;
@@ -35,6 +38,8 @@ AI* Parser::doParse() {
             if (!needPath)
                 throw std::runtime_error("Unexpected argument: " + token);
             ++it;
+            if (it == tokens.end())
+                throw std::runtime_error("Please specify a path!");
             if (it->front() == '-')
                 throw std::runtime_error("Invalid path: " + *it);
             path = *it;
@@ -43,6 +48,10 @@ AI* Parser::doParse() {
         else
             throw std::runtime_error("Invalid argument: " + token);
     }
+    if (ai_type == 0) throw std::runtime_error("Please specify an AI type!");
+    if (needPath && path == "")
+        throw std::runtime_error("Please specify a path!");
+        
     switch (ai_type) {
         case AI_TYPE_CHAT:
             return new ChatAI(ai_create(MY_TOKEN), prompt);
