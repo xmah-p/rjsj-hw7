@@ -90,3 +90,29 @@ void MathAI::showResponse() {
     std::copy(dest, dest + len + 1, os_it);
     delete[] dest;
 }
+
+TranslateAI::~TranslateAI() { ai_free(bot); }
+
+void TranslateAI::sendRequest() {
+    try {
+        ai_send(bot, AI_TYPE_TRANSLATE, prompt.c_str());
+        int code = ai_status(bot);
+        if (code != 0)
+            throw std::runtime_error(
+                "Error occurred when sending requests! Error code: " +
+                std::to_string(code));
+
+    } catch (std::runtime_error& e) {
+        std::cerr << e.what();
+    }
+}
+
+void TranslateAI::showResponse() {
+    std::ostream_iterator<char> os_it(std::cout);
+    char* dest{nullptr};
+    int len = ai_result(bot, dest);
+    dest = new char[len + 1];
+    ai_result(bot, dest);
+    std::copy(dest, dest + len + 1, os_it);
+    delete[] dest;
+}

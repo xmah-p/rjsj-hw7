@@ -1,3 +1,4 @@
+
 #include "./parser.h"
 
 #include <iostream>
@@ -13,9 +14,11 @@ AI* Parser::doParse() {
     std::string prompt = "";
     std::string path = "";
 
-    std::unordered_map<std::string, int> types{{"--chat", AI_TYPE_CHAT},
-                                               {"--draw", AI_TYPE_DRAW},
-                                               {"--math", AI_TYPE_WOLFRAM}};
+    std::unordered_map<std::string, int> types{
+        {"--chat", AI_TYPE_CHAT},
+        {"--draw", AI_TYPE_DRAW},
+        {"--math", AI_TYPE_WOLFRAM},
+        {"--translate", AI_TYPE_TRANSLATE}};
     bool needPath = true;
 
     for (auto it = tokens.begin(); it != tokens.end(); ++it) {
@@ -23,8 +26,10 @@ AI* Parser::doParse() {
 
         if (types.find(token) != types.end()) {
             if (ai_type != 0)
-                throw std::runtime_error("Invalid argument: " + token);
-            if ((ai_type = types[token]) == AI_TYPE_CHAT) needPath = false;
+                throw std::runtime_error("Unexpected argument: " + token);
+            if ((ai_type = types[token]) == AI_TYPE_CHAT ||
+                (ai_type = types[token]) == AI_TYPE_TRANSLATE)
+                needPath = false;
             ++it;
             if (it == tokens.end())
                 throw std::runtime_error("Please enter prompt!");
@@ -51,7 +56,9 @@ AI* Parser::doParse() {
     if (ai_type == 0) throw std::runtime_error("Please specify an AI type!");
     if (needPath && path == "")
         throw std::runtime_error("Please specify a path!");
-        
+    if (needPath && path.substr(path.length() - 4) != ".png")
+        throw std::runtime_error("Invalid path: " + path + ", must be a PNG file");
+
     switch (ai_type) {
         case AI_TYPE_CHAT:
             return new ChatAI(ai_create(MY_TOKEN), prompt);
@@ -61,6 +68,9 @@ AI* Parser::doParse() {
             break;
         case AI_TYPE_WOLFRAM:
             return new MathAI(ai_create(MY_TOKEN), prompt, path);
+            break;
+        case AI_TYPE_TRANSLATE:
+            return new TranslateAI(ai_create(MY_TOKEN), prompt);
             break;
         default:
             throw std::runtime_error("Fail to initialize AI!");
