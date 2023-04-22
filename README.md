@@ -7,9 +7,9 @@
 - `--translate prompt`：调用百度翻译，`prompt` 是向百度翻译输入的内容。结果打印到标准输出。
 - `--draw prompt`：调用 OpenAI 绘图，`prompt` 是向 OpenAI 绘图输入的内容。
 - `--math prompt`：调用 WolframAlpha，`prompt` 是向 WolframAlpha 输入的内容。
-- `--output file` 或 `-o file`：使用 `--draw` 和 `--math` 时**必须**提供的选项。指定结果保存的文件，**只支持 PNG 文件**。
+- `--output file` 或 `-o file`：使用 `--draw` 和 `--math` 时**必须**提供的选项。指定结果（PNG 格式图片）保存的文件。
 
-同时提供的选项，顺序可以是任意的。所有以 - 开头的内容都会被视为选项，因此 `prompt` 和 `file` 都不能以 - 开头。`file` 参数必须以 `.png` 结尾。
+同时提供的选项，顺序可以是任意的。所有以 - 开头的内容都会被视为选项，因此 `prompt` 和 `file` 都不能以 - 开头。
 
 使用示例：
 

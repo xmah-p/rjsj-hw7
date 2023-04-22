@@ -14,43 +14,37 @@
 ChatAI::~ChatAI() { ai_free(bot); }
 
 void ChatAI::sendRequest() {
-    try {
-        ai_send(bot, AI_TYPE_CHAT, prompt.c_str());
-        int code = ai_status(bot);
-        if (code != 0)
-            throw std::runtime_error(
-                "Error occurred when sending requests! Error code: " +
-                std::to_string(code));
-
-    } catch (std::runtime_error& e) {
-        std::cerr << e.what();
-    }
+    ai_send(bot, AI_TYPE_CHAT, prompt.c_str());
+    int code = ai_status(bot);
+    if (code != 0)
+        throw std::runtime_error(
+            "Error occurred when sending requests! Error code: " +
+            std::to_string(code));
 }
 
 void ChatAI::showResponse() {
-    std::ostream_iterator<char> os_it(std::cout);
     char* dest{nullptr};
     int len = ai_result(bot, dest);
     dest = new char[len + 1];
     ai_result(bot, dest);
-    std::copy(dest, dest + len + 1, os_it);
-    delete [] dest;
+    if (path == "")
+        std::copy(dest, dest + len + 1, std::ostream_iterator<char>(std::cout));
+    else {
+        std::ofstream out_file(path, std::ios::out | std::ios::binary);
+        std::copy(dest, dest + len + 1, std::ostream_iterator<char>(out_file));
+    }
+    delete[] dest;
 }
 
 DrawAI::~DrawAI() { ai_free(bot); }
 
 void DrawAI::sendRequest() {
-    try {
-        ai_send(bot, AI_TYPE_DRAW, prompt.c_str());
-        int code = ai_status(bot);
-        if (code != 0)
-            throw std::runtime_error(
-                "Error occurred when sending requests! Error code: " +
-                std::to_string(code));
-
-    } catch (std::runtime_error& e) {
-        std::cerr << e.what();
-    }
+    ai_send(bot, AI_TYPE_DRAW, prompt.c_str());
+    int code = ai_status(bot);
+    if (code != 0)
+        throw std::runtime_error(
+            "Error occurred when sending requests! Error code: " +
+            std::to_string(code));
 }
 
 void DrawAI::showResponse() {
@@ -67,17 +61,12 @@ void DrawAI::showResponse() {
 MathAI::~MathAI() { ai_free(bot); }
 
 void MathAI::sendRequest() {
-    try {
-        ai_send(bot, AI_TYPE_WOLFRAM, prompt.c_str());
-        int code = ai_status(bot);
-        if (code != 0)
-            throw std::runtime_error(
-                "Error occurred when sending requests! Error code: " +
-                std::to_string(code));
-
-    } catch (std::runtime_error& e) {
-        std::cerr << e.what();
-    }
+    ai_send(bot, AI_TYPE_WOLFRAM, prompt.c_str());
+    int code = ai_status(bot);
+    if (code != 0)
+        throw std::runtime_error(
+            "Error occurred when sending requests! Error code: " +
+            std::to_string(code));
 }
 
 void MathAI::showResponse() {
