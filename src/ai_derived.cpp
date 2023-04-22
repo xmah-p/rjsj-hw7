@@ -28,13 +28,17 @@ void ChatAI::sendRequest() {
 }
 
 void ChatAI::showResponse() {
-    std::ostream_iterator<char> os_it(std::cout);
     char* dest{nullptr};
     int len = ai_result(bot, dest);
     dest = new char[len + 1];
     ai_result(bot, dest);
-    std::copy(dest, dest + len + 1, os_it);
-    delete [] dest;
+    if (path == "")
+        std::copy(dest, dest + len + 1, std::ostream_iterator<char>(std::cout));
+    else {
+        std::ofstream out_file(path, std::ios::out | std::ios::binary);
+        std::copy(dest, dest + len + 1, std::ostream_iterator<char>(out_file));
+    }
+    delete[] dest;
 }
 
 DrawAI::~DrawAI() { ai_free(bot); }

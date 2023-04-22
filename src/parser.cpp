@@ -40,8 +40,8 @@ AI* Parser::doParse() {
         }
 
         else if (token == "--output" || token == "-o") {
-            if (!needPath)
-                throw std::runtime_error("Unexpected argument: " + token);
+            //if (!needPath)
+            //    throw std::runtime_error("Unexpected argument: " + token);
             ++it;
             if (it == tokens.end())
                 throw std::runtime_error("Please specify a path!");
@@ -56,12 +56,12 @@ AI* Parser::doParse() {
     if (ai_type == 0) throw std::runtime_error("Please specify an AI type!");
     if (needPath && path == "")
         throw std::runtime_error("Please specify a path!");
-    if (needPath && path.substr(path.length() - 4) != ".png")
-        throw std::runtime_error("Invalid path: " + path + ", must be a PNG file");
+    // if (needPath && path.substr(path.length() - 4) != ".png")
+    //    throw std::runtime_error("Invalid path: " + path + ", must be a PNG file");
 
     switch (ai_type) {
         case AI_TYPE_CHAT:
-            return new ChatAI(ai_create(MY_TOKEN), prompt);
+            return new ChatAI(ai_create(MY_TOKEN), prompt, path);
             break;
         case AI_TYPE_DRAW:
             return new DrawAI(ai_create(MY_TOKEN), prompt, path);
