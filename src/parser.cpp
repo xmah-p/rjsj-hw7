@@ -27,6 +27,7 @@ AI* Parser::doParse() {
         if (types.find(token) != types.end()) {
             if (ai_type != 0)
                 throw std::runtime_error("Unexpected argument: " + token);
+            ai_type = types[token];
             ++it;
             if (it == tokens.end())
                 throw std::runtime_error("Please enter prompt!");
