@@ -37,8 +37,8 @@ AI* Parser::doParse() {
         }
 
         else if (token == "--output" || token == "-o") {
-            if (!needPath)
-                throw std::runtime_error("Unexpected argument: " + token);
+            //if (!needPath)
+            //    throw std::runtime_error("Unexpected argument: " + token);
             ++it;
             if (it == tokens.end())
                 throw std::runtime_error("Please specify a path!");
