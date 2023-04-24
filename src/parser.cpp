@@ -21,6 +21,7 @@ AI* Parser::doParse() {
         {"--translate", AI_TYPE_TRANSLATE}};
     bool needPath = true;
 
+    // example: tokens = {"--draw", "something" "-o", "a/b.png"}
     for (auto it = tokens.begin(); it != tokens.end(); ++it) {
         auto token = *it;
 

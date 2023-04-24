@@ -28,10 +28,10 @@ void ChatAI::showResponse() {
     dest = new char[len + 1];
     ai_result(bot, dest);
     if (path == "")
-        std::copy(dest, dest + len + 1, std::ostream_iterator<char>(std::cout));
+        std::copy(dest, dest + len, std::ostream_iterator<char>(std::cout));
     else {
         std::ofstream out_file(path, std::ios::out | std::ios::binary);
-        std::copy(dest, dest + len + 1, std::ostream_iterator<char>(out_file));
+        std::copy(dest, dest + len, std::ostream_iterator<char>(out_file));
     }
     delete[] dest;
 }
@@ -54,7 +54,7 @@ void DrawAI::showResponse() {
     int len = ai_result(bot, dest);
     dest = new char[len + 1];
     ai_result(bot, dest);
-    std::copy(dest, dest + len + 1, os_it);
+    std::copy(dest, dest + len, os_it);
     delete[] dest;
 }
 
@@ -76,7 +76,7 @@ void MathAI::showResponse() {
     int len = ai_result(bot, dest);
     dest = new char[len + 1];
     ai_result(bot, dest);
-    std::copy(dest, dest + len + 1, os_it);
+    std::copy(dest, dest + len, os_it);
     delete[] dest;
 }
 
@@ -102,6 +102,6 @@ void TranslateAI::showResponse() {
     int len = ai_result(bot, dest);
     dest = new char[len + 1];
     ai_result(bot, dest);
-    std::copy(dest, dest + len + 1, os_it);
+    std::copy(dest, dest + len, os_it);
     delete[] dest;
 }
